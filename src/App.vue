@@ -28,56 +28,55 @@
   <addVue :isShow="isShow" :info="info" @closeAdd="closeAdd" @save="save"></addVue>
 
   <!-- <router-view></router-view> -->
-
 </template>
 
 <script lang="ts" setup>
-  import { ref } from 'vue'
-  import addVue from '@/login-solana-module/views/modal.vue'
-  import User from '@/login-solana-module/class/User'
-  import { ElMessage } from 'element-plus';
+import { ref } from 'vue'
+import addVue from '@/login-solana-module/views/modal.vue'
+import User from '@/login-solana-module/class/User'
+import { ElMessage } from 'element-plus';
 
-  const total = ref(100)
-  const info = ref < User > (new User())
-  const isShow = ref(false)
-  const SearchVal = ref("")
-  const enterSearch = () => {
+// const total = ref(100)
+const info = ref<User>(new User())
+const isShow = ref(false)
+const SearchVal = ref("")
+const enterSearch = () => {
 
-  }
-  const openAdd = () => {
-    isShow.value = true
-  }
+}
+const openAdd = () => {
+  isShow.value = true
+}
 
-  const closeAdd = () => {
-    isShow.value = false
-    info.value = new User()
-  }
+const closeAdd = () => {
+  isShow.value = false
+  info.value = new User()
+}
 
-  const save = (message: string) => {
-    isShow.value = false
-    info.value = new User()
-    ElMessage.success(message)
-  }
+const save = (message: string) => {
+  isShow.value = false
+  info.value = new User()
+  ElMessage.success(message)
+}
 
 
-  const onDel = () => {
+const onDel = () => {
 
-  }
+}
 
-  const tableData = [
-    {
-      date: '2222-05-03',
-      name: 'tom',
-      address: 'No.189xa'
-    }, {
-      date: '2222-05-03',
-      name: 'tom',
-      address: 'No.189xa'
-    }, {
-      date: '2222-05-03',
-      name: 'tom',
-      address: 'No.189xa'
-    },
-  ]
+const tableData = [
+  {
+    date: '2222-05-03',
+    name: 'tom',
+    address: 'No.189xa'
+  }, {
+    date: '2222-05-03',
+    name: 'tom',
+    address: 'No.189xa'
+  }, {
+    date: '2222-05-03',
+    name: 'tom',
+    address: 'No.189xa'
+  },
+]
 
 </script>

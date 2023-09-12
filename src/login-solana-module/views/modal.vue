@@ -27,46 +27,46 @@
 
 <script lang="ts" setup>
 
-    import { ref, Ref, computed, watch } from 'vue';
-    import User from '@/login-solana-module/class/user'
+import { ref, Ref, computed, watch } from 'vue';
+import User from '@/login-solana-module/class/User'
 
-    const props = defineProps({
-        isShow: Boolean,
-        info: User
-    })
+const props = defineProps({
+    isShow: Boolean,
+    info: User
+})
 
-    const dialogTableVisible = computed(() => props.isShow)
-    const form: Ref<User> = ref < User > ({
-        id: "",
-        date: "",
-        name: "",
-        address: "",
+const dialogTableVisible = computed(() => props.isShow)
+const form: Ref<User> = ref<User>({
+    id: "",
+    date: "",
+    name: "",
+    address: "",
 
-    })
-    // watch(() => props.info, (newInfo) => {
-    //     if (newInfo) {
-    //         form.value = {
-    //             id: newInfo.id,
-    //             date: newInfo.date,
-    //             name: newInfo.name,
-    //             address: newInfo.address,
-    //             // order: newInfo.order,
-    //         }
-    //     }
-    // })
-    const disableDate = (time: any) => {
-        const _maxTime = Date.now() - 24 * 60 * 60 * 1000 * 1
-        return time.getTime() <= _maxTime
-    }
-    // 子组件这里通过事件，监听关闭和保存按钮
-    const emits = defineEmits(["closeAdd", "success"])
+})
+// watch(() => props.info, (newInfo) => {
+//     if (newInfo) {
+//         form.value = {
+//             id: newInfo.id,
+//             date: newInfo.date,
+//             name: newInfo.name,
+//             address: newInfo.address,
+//             // order: newInfo.order,
+//         }
+//     }
+// })
+const disableDate = (time: any) => {
+    const _maxTime = Date.now() - 24 * 60 * 60 * 1000 * 1
+    return time.getTime() <= _maxTime
+}
+// 子组件这里通过事件，监听关闭和保存按钮
+const emits = defineEmits(["closeAdd", "success"])
 
-    const closeAdd = () => {
-        emits("closeAdd")
-    }
-    const save = () => {
-        emits("success")
-    }
+const closeAdd = () => {
+    emits("closeAdd")
+}
+const save = () => {
+    emits("success")
+}
 
 
 </script>
