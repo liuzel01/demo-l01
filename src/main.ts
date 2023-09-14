@@ -1,6 +1,7 @@
 import { createApp } from 'vue';
 import App from '@/App.vue'
 import router from "@/login-solana-module/router";
+import '@/lesson'
 
 // [mk] inject element-plus
 import ElementPlus from "element-plus";

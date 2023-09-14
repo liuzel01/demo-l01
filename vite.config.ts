@@ -9,15 +9,21 @@ export default defineConfig({
   plugins: [vue()],
   // 增加以下的配置
   resolve: {
-    alias: [
-      {
-        find: '@',
-        replacement: resolve(__dirname, 'src')
-      },
-      {
-        find: 'components',
-        replacement: resolve(__dirname, 'src/components')
-      }
-    ]
+    alias: {
+      '@': fileURLToPath(new URL('./src', import.meta.url))
+    }
   }
+
+  // resolve: {
+  //   alias: [
+  //     {
+  //       find: '@',
+  //       replacement: resolve(__dirname, 'src')
+  //     },
+  //     {
+  //       find: 'components',
+  //       replacement: resolve(__dirname, 'src/components')
+  //     }
+  //   ]
+  // }
 })
