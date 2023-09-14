@@ -1,69 +1,46 @@
 <template>
   <div class="container">
-    <!-- <el-row>
-      <el-col :span="12">
-        <el-input v-model="SearchVal" placeholder="pleas input" class="input-with-select" ketup.enter="enterSearch">
-          <template #append>
-            <el-button @click="enterSearch" />
-          </template>
-
-        </el-input>
-      </el-col>
-
-      <el-col :span="12">
-        <el-button type="primary" @click="openAdd">add</el-button>
-        <el-button type="danger" @click="onDel">delete</el-button>
-      </el-col>
-    </el-row> -->
-
     <p>
-      <el-button type="primary" @click="connWallet">
+      <el-button type="primary" @click="getAccount">
         钱包登录
       </el-button>
     </p>
-    <addVue :isShow="isShow" @cancelAdd="cancelAdd"></addVue>
+    <!-- <addVue :isShow="isShow" @cancelAdd="cancelAdd"></addVue> -->
 
   </div>
-  <addVue :isShow="isShow" :info="info" @cancelAdd="cancelAdd" @save="save"></addVue>
+  <addVue :isShow="isShow" @cancelAdd="cancelAdd" @save="save"></addVue>
 
   <!-- <router-view></router-view> -->
 </template>
 
 <script lang="ts" setup>
-  import { ref } from 'vue'
-  import addVue from '@/login-solana-module/views/modal.vue'
-  import User from '@/login-solana-module/class/User'
-  import { ElMessage } from 'element-plus';
+import { ref } from 'vue'
+import { ElMessage } from 'element-plus'
+import addVue from '@/login-solana-module/views/modal.vue'
+// import { PublicKey } from '@solana/web3.js'
+// import { Connection } from '@solana/web3.js'
 
-  const connWallet = () => {
-    isShow.value = true
+const getAccount = async () => {
+  const { solana } = window
+  if (solana) {
+    const response = await solana.connect()
+    console.log('address:', response.publicKey.toString())
   }
+}
 
-  // const total = ref(100)
-  const info = ref < User > (new User())
-  const isShow = ref(false)
-  const SearchVal = ref("")
-  const enterSearch = () => {
+// const getAccount = () => {
+//   isShow.value = true
+// }
+const isShow = ref(false)
 
-  }
-  const openAdd = () => {
-    isShow.value = true
-  }
+const cancelAdd = () => {
+  isShow.value = false
+  // info.value = new User()
+}
 
-  const cancelAdd = () => {
-    isShow.value = false
-    info.value = new User()
-  }
-
-  const save = (message: string) => {
-    isShow.value = false
-    info.value = new User()
-    ElMessage.success(message)
-  }
-
-
-  const onDel = () => {
-
-  }
+const save = (message: string) => {
+  isShow.value = false
+  ElMessage.success(message)
+}
 
 </script>
