@@ -1,0 +1,58 @@
+@import "./vars.less";
+
+// el-link
+.el-link {
+    color: @themeColorBlack !important;
+    transition: color 0.25s ease;
+
+    font-size: 19.6px;
+    font-weight: 700;
+}
+
+.el-link--primary {
+    color: @themeColorRed !important;
+}
+
+.el-link:hover {
+    color: @themeColorRed !important;
+}
+
+.el-link:after {
+    border-color: @noColor !important;
+}
+
+// el-icon
+.el-icon {
+    transition: transform 0.25s ease;
+    font-size: 13px;
+    font-weight: 800;
+    transition-property: transform, color;
+}
+
+.el-icon-rotate180 {
+    transform: rotate(-180deg);
+    color: @themeColorRed !important;
+}
+
+.el-icon-active {
+    color: @themeColorRed !important;
+}
+
+// el-popper
+.el-popper {
+    border-radius: 18px !important;
+}
+
+// el-button
+.el-button {
+    height: 40px;
+    font-size: 22px !important;
+    background-color: @themeColorRed !important;
+    border-color: @themeColorRed !important;
+}
+
+.el-button:hover,
+.el-button:focus {
+    background-color: @themeColorRed !important;
+    border-color: @themeColorRed !important;
+}

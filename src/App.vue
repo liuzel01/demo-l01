@@ -1,46 +1,39 @@
 <template>
-  <div class="container">
-    <p>
-      <el-button type="primary" @click="getAccount">
-        钱包登录
-      </el-button>
-    </p>
-    <!-- <addVue :isShow="isShow" @cancelAdd="cancelAdd"></addVue> -->
-
-  </div>
-  <addVue :isShow="isShow" @cancelAdd="cancelAdd" @save="save"></addVue>
-
-  <!-- <router-view></router-view> -->
+  <RouterView />
 </template>
 
-<script lang="ts" setup>
-import { ref } from 'vue'
-import { ElMessage } from 'element-plus'
-import addVue from '@/login-solana-module/views/modal.vue'
-// import { PublicKey } from '@solana/web3.js'
-// import { Connection } from '@solana/web3.js'
-
-const getAccount = async () => {
-  const { solana } = window
-  if (solana) {
-    const response = await solana.connect()
-    console.log('address:', response.publicKey.toString())
-  }
-}
-
-// const getAccount = () => {
-//   isShow.value = true
-// }
-const isShow = ref(false)
-
-const cancelAdd = () => {
-  isShow.value = false
-  // info.value = new User()
-}
-
-const save = (message: string) => {
-  isShow.value = false
-  ElMessage.success(message)
-}
-
+<script setup lang="ts">
+import { RouterView } from "vue-router";
 </script>
+
+<!-- <template>
+  <div class="w-full max-w-3xl lg:max-w-4xl mx-auto">
+
+    <the-sidebar class="py-4 md:py-8 md:pl-4 md:pr-8 fixed w-20 md:w-64"></the-sidebar>
+
+    <main class="flex-1 border-r border-l ml-20 md:ml-64 min-h-screen">
+      <header class="flex space-x-6 items-center justify-between px-8 py-4 border-b">
+        <div class="text-xl font-bold" v-text="route.name"></div>
+      </header>
+      <router-view></router-view>
+    </main>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { useRoute } from 'vue-router'
+import TheSidebar from '@/components/TheSidebar.vue'
+import { PhantomWalletAdapter, SolflareWalletAdapter } from '@solana/wallet-adapter-wallets'
+import { initWallet } from 'solana-wallets-vue'
+import { initWorkspace } from '@/composables'
+
+const route = useRoute()
+
+const wallets = [
+  new PhantomWalletAdapter(),
+  new SolflareWalletAdapter(),
+]
+
+initWallet({ wallets, autoConnect: true })
+initWorkspace()
+</script> -->

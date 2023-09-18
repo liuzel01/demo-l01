@@ -28,10 +28,6 @@
 // import User from '@/login-solana-module/class/User'
 // import loginUser from '@/login-solana-module/loginModal'
 
-// const props = defineProps({
-//     isShow: Boolean,
-// })
-// const dialogTableVisible = computed(() => props.isShow)
 // 子组件这里通过事件，监听关闭和保存按钮
 const emits = defineEmits(["cancelAdd", "success"])
 const cancelAdd = () => {
