@@ -117,6 +117,9 @@
                     Whitepaper
                 </el-link>
             </div>
+            <!-- <div class="nav-item">
+                <Wallet />
+            </div> -->
 
         </div>
 
@@ -125,6 +128,10 @@
             <el-icon v-if="viewIsLogin === false" class="wallet-icon-entry-item" @click="loginByBroswerWalletPluginAction">
                 <Wallet />
             </el-icon>
+
+            <!-- <el-icon v-if="viewIsLogin === false" class="wallet-icon-entry-item">
+                <wallet-multi-button />
+            </el-icon> -->
 
             <el-button v-if="viewIsLogin === false" type="primary" round @click.prevent="gotoPageAction(`/login`)">
                 Login
@@ -137,92 +144,9 @@
                 </el-icon>
             </el-badge>
 
-            <!-- <el-link v-if="viewIsLogin === true && viewUserInfo.publicAddress" class="user-info-entry-item">
-                {{ viewUserInfo.shortPublicAddress }}
-            </el-link> -->
-
-            <!-- <div class="entry-item">
-                <el-popover v-model:visible="viewIsAvatarAndOperateEntryItemExpand" :show-arrow="false"
-                    popper-class="avatar-and-operate-entry-item-popper" trigger="click" placement="bottom-end"
-                    :hide-after="0">
-                    <template #reference>
-                        <div class="avatar-and-operate-entry-item">
-
-                            <template v-if="viewIsLogin === true && viewUserInfo.avatarUrl">
-                                <img class="avatar-icon-entry-item" :src="viewUserInfo.avatarUrl" />
-                            </template>
-                            <template v-if="viewIsLogin === true && !viewUserInfo.avatarUrl">
-                                <img class="avatar-icon-entry-item" src="../assets/images/default-avatar.png" width="72"
-                                    height="72" />
-                            </template>
-
-                            <el-icon v-if="viewIsLogin === false" :class="[`dot-icon-entry-item`]">
-                                <MoreFilled />
-                            </el-icon>
-
-                            <el-icon v-if="viewIsLogin === true" :class="[`arrow-icon-entry-item`,
-                                viewIsAvatarAndOperateEntryItemExpand === true ? `el-icon-rotate180` : ``,
-                            ]">
-                                <ArrowDown />
-                            </el-icon>
-                        </div>
-                    </template>
-                    <template #default>
-                        <div class="avatar-and-operate-entry-item-popper-content">
-
-                            <div v-if="viewIsLogin === true" class="operate-entry-item">
-                                <el-icon>
-                                    <Remove />
-                                </el-icon>
-                                <el-link href="/offers">Offers</el-link>
-                            </div>
-
-                            <div v-if="viewIsLogin === true" class="operate-entry-item">
-                                <el-icon>
-                                    <Remove />
-                                </el-icon>
-                                <el-link href="/orders">Orders</el-link>
-                            </div>
-
-                            <div class="operate-entry-item">
-                                <el-icon>
-                                    <Remove />
-                                </el-icon>
-
-                                <el-link href="/help-center">Help Center</el-link>
-                            </div>
-
-                            <div class="operate-entry-item">
-                                <el-icon>
-                                    <Remove />
-                                </el-icon>
-                                <el-link>Language</el-link>
-                            </div>
-
-                            <div v-if="viewIsLogin === true" class="operate-entry-item">
-                                <el-icon>
-                                    <Remove />
-                                </el-icon>
-                                <el-link href="/setting">Setting</el-link>
-                            </div>
-
-                            <div v-if="viewIsLogin === true" class="operate-entry-item" @click="logoutAction">
-                                <el-icon>
-                                    <Remove />
-                                </el-icon>
-                                <el-link>Log Out</el-link>
-                            </div>
-
-                        </div>
-                    </template>
-                </el-popover>
-            </div> -->
 
         </div>
-
     </div>
-    <!-- Sidebar. -->
-    <!-- <the-sidebar class="py-4 md:py-8 md:pl-4 md:pr-8 fixed w-20 md:w-64"></the-sidebar> -->
 </template>
 
 <script setup lang="ts">
@@ -230,22 +154,30 @@ import { useRoute, useRouter } from "vue-router";
 import { ref, computed } from "vue";
 import { useStore } from "vuex";
 import { PhantomWalletAdapter, SolflareWalletAdapter } from '@solana/wallet-adapter-wallets'
-import { initWallet } from 'solana-wallets-vue'
-import { initWorkspace } from '@/composables'
+import {
+    initWallet,
+    useWallet as useSolanaWalletsAdapterWallet,
+    useAnchorWallet as useSolanaWalletsAdapterAnchorWallet,
+    type AnchorWallet as tSolanaWalletsAdapterAnchorWallet
+} from "solana-wallets-vue";
+import * as SolanaAnchorJs from "@project-serum/anchor";
+import { solanaAlchemyUrl } from "@/services/consts";
+import { solanaCommitmentEnum } from "@/solana/v1/services/libs/enums";
+import MyPackageProvider, { nftTypeEnum, nftTypeQueryTabEnum, nftTypeLabelEnum, nftStateLabelEnum } from "@/my-package-module/services/my-package.provider";
+import type { WalletName as tSolanaWalletAdapterWalletName } from "@solana/wallet-adapter-base";
 // import { vuexActionKeys } from "@/login-module/services/login.store";
-
 
 const $route = useRoute();
 const $router = useRouter();
 const $store = useStore();
 
-const wallets = [
-    new PhantomWalletAdapter(),
-    new SolflareWalletAdapter(),
-]
-
-initWallet({ wallets, autoConnect: true })
-initWorkspace()
+// // 可以后面再研究按钮调用wallet
+// const wallets = [
+//     new PhantomWalletAdapter(),
+//     new SolflareWalletAdapter(),
+// ]
+// initWallet({ wallets, autoConnect: true })
+// initWorkspace()
 
 // import LoginProvider from "@/login-module/services/login.provider";
 
@@ -259,29 +191,61 @@ const viewIsLogin = computed<boolean>(
     }
 );
 
-// const viewUserInfo = computed<tDbUserInfo>(() => {
-//     return $store.getters.getVuexUserInfo;
-// });
-
 const gotoPageAction = (routePath: string = "/login") => {
     $router.push(routePath);
 };
 
-const loginByBroswerWalletPluginAction = () => {
+const loginByBroswerWalletPluginAction = async () => {
     alert("[todo]");
+
+    // // [mk] 3-1 init solana wallets adapter
+    // initWallet(
+    //     {
+    //         wallets: [new PhantomWalletAdapter(), new SolflareWalletAdapter(),],
+    //         autoConnect: false,
+    //     }
+    // );
+
+    // // [mk] 3-2 load installed broswer wallet plugin list
+    const solanaWalletsAdapterWallet = useSolanaWalletsAdapterWallet();
+    const broswerWalletPluginList = solanaWalletsAdapterWallet.wallets.value;
+
+    console.log(broswerWalletPluginList.length);
+
+    // let enableBroswerWalletPluginCount = 0;
+    // for (let index = 0; index < broswerWalletPluginList.length; index++) {
+
+    //     if (broswerWalletPluginList[index].readyState === `Installed`) {
+    //         enableBroswerWalletPluginCount++;
+    //     }
+    // }
+
+    // // [mk] 3-3
+    // if (enableBroswerWalletPluginCount === 0) {
+    //     return;
+    // }
+
+    // // [mk] 3-4 select wallet plugin and connect
+    // solanaWalletsAdapterWallet.select("Phantom" as tSolanaWalletAdapterWalletName);
+    // await solanaWalletsAdapterWallet.connect();
+
+    // // [mk] 3-5 get my wallet plugin nft token address base58 list 
+    // const solanaWalletsAdapterAnchorWallet: any = useSolanaWalletsAdapterAnchorWallet();
+    // const solanaAnchorJsWeb3Connection = new SolanaAnchorJs.web3.Connection(solanaAlchemyUrl, solanaCommitmentEnum.confirmed);
+
+    // const tmpMyBroswerWalletPluginNftTokenAddressBase58List = await MyPackageProvider.getMyBroswerWalletPluginNftTokenAddressBase58List(
+    //     solanaWalletsAdapterAnchorWallet.value?.publicKey as SolanaAnchorJs.web3.PublicKey,
+    //     solanaWalletsAdapterAnchorWallet as tSolanaWalletsAdapterAnchorWallet,
+    //     solanaAnchorJsWeb3Connection
+    // );
+
+    // // [mk] 3-6
+    // if (tmpMyBroswerWalletPluginNftTokenAddressBase58List.length === 0) {
+    //     return;
+    // }
+
 };
 
-// const logoutAction = async () => {
-
-//     viewIsAvatarAndOperateEntryItemExpand.value = false;
-
-//     await LoginProvider.logout();
-
-//     await $store.dispatch(vuexActionKeys.logout);
-
-//     $router.push("/home");
-
-// };
 </script>
 
 <style lang="less" scoped>

@@ -59,53 +59,53 @@ const loginProvider = {
 
     },
 
-    login: (email: string, password: string): Promise<iProviderOutputWithT<tDbLoginInfo>> => {
+    // login: (email: string, password: string): Promise<iProviderOutputWithT<tDbLoginInfo>> => {
 
-        return new Promise(
-            (resolve, reject) => {
+    //     return new Promise(
+    //         (resolve, reject) => {
 
-                let output: iProviderOutputWithT<tDbLoginInfo> = {
-                    result: false,
-                    code: 200,
-                    data: null,
-                    message: "",
-                };
+    //             let output: iProviderOutputWithT<tDbLoginInfo> = {
+    //                 result: false,
+    //                 code: 200,
+    //                 data: null,
+    //                 message: "",
+    //             };
 
-                HttpProvider.post(`/uc/auth/login`, { email, password }).then(
-                    res => {
+    //             HttpProvider.post(`/uc/auth/login`, { email, password }).then(
+    //                 res => {
 
 
-                        if (res.code === 200) {
+    //                     if (res.code === 200) {
 
-                            output.result = true;
-                            output.data = res.data;
+    //                         output.result = true;
+    //                         output.data = res.data;
 
-                        }
-                        else {
+    //                     }
+    //                     else {
 
-                            output.result = false;
+    //                         output.result = false;
 
-                            output.code = res.code;
-                            output.data = res.data;
-                            output.message = res.message;
+    //                         output.code = res.code;
+    //                         output.data = res.data;
+    //                         output.message = res.message;
 
-                        }
+    //                     }
 
-                        resolve(output);
+    //                     resolve(output);
 
-                    },
-                    err => {
+    //                 },
+    //                 err => {
 
-                        output.message = err.message;
-                        resolve(output);
+    //                     output.message = err.message;
+    //                     resolve(output);
 
-                    }
-                );
+    //                 }
+    //             );
 
-            }
-        );
+    //         }
+    //     );
 
-    },
+    // },
     login2fa: (token: string, mailCode: string): Promise<iProviderOutputWithT<tDbLoginInfo>> => {
 
         return new Promise(
