@@ -221,17 +221,31 @@
         </div>
 
     </div>
+    <!-- Sidebar. -->
+    <!-- <the-sidebar class="py-4 md:py-8 md:pl-4 md:pr-8 fixed w-20 md:w-64"></the-sidebar> -->
 </template>
 
 <script setup lang="ts">
 import { useRoute, useRouter } from "vue-router";
 import { ref, computed } from "vue";
 import { useStore } from "vuex";
+import { PhantomWalletAdapter, SolflareWalletAdapter } from '@solana/wallet-adapter-wallets'
+import { initWallet } from 'solana-wallets-vue'
+import { initWorkspace } from '@/composables'
 // import { vuexActionKeys } from "@/login-module/services/login.store";
+
 
 const $route = useRoute();
 const $router = useRouter();
 const $store = useStore();
+
+const wallets = [
+    new PhantomWalletAdapter(),
+    new SolflareWalletAdapter(),
+]
+
+initWallet({ wallets, autoConnect: true })
+initWorkspace()
 
 // import LoginProvider from "@/login-module/services/login.provider";
 
