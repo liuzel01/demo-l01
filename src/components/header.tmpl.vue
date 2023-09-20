@@ -165,21 +165,17 @@ import { solanaAlchemyUrl } from "@/services/consts";
 import { solanaCommitmentEnum } from "@/solana/v1/services/libs/enums";
 import MyPackageProvider, { nftTypeEnum, nftTypeQueryTabEnum, nftTypeLabelEnum, nftStateLabelEnum } from "@/my-package-module/services/my-package.provider";
 import type { WalletName as tSolanaWalletAdapterWalletName } from "@solana/wallet-adapter-base";
-// import { vuexActionKeys } from "@/login-module/services/login.store";
+import { ucApi } from '@/api/uc';
+import { MetamaskOperate } from '@/enum/auth';
+import moment from 'moment'
+import { useWallet } from '@solana/wallet-adapter-react';
+import * as bs58 from 'bs58';
+import { writeToken } from '@/storage/token'
+import { login$, changeWallet$ } from '@/streams/config';
 
 const $route = useRoute();
 const $router = useRouter();
 const $store = useStore();
-
-// // 可以后面再研究按钮调用wallet
-// const wallets = [
-//     new PhantomWalletAdapter(),
-//     new SolflareWalletAdapter(),
-// ]
-// initWallet({ wallets, autoConnect: true })
-// initWorkspace()
-
-// import LoginProvider from "@/login-module/services/login.provider";
 
 const viewIsHomeNavItemExpand = ref<boolean>(false);
 const viewIsMarketPlaceNavItemExpand = ref<boolean>(false);
@@ -195,56 +191,103 @@ const gotoPageAction = (routePath: string = "/login") => {
     $router.push(routePath);
 };
 
-const loginByBroswerWalletPluginAction = async () => {
-    alert("[todo]");
+// const loginByBroswerWalletPluginAction = async () => {
+// alert("[todo]");
 
-    // // [mk] 3-1 init solana wallets adapter
-    // initWallet(
-    //     {
-    //         wallets: [new PhantomWalletAdapter(), new SolflareWalletAdapter(),],
-    //         autoConnect: false,
-    //     }
-    // );
+// const base58 = useMemo(() => {
+//     const address = publicKey?.toBase58()
+//     return address
+// }, [publicKey]);
 
-    // // [mk] 3-2 load installed broswer wallet plugin list
-    const solanaWalletsAdapterWallet = useSolanaWalletsAdapterWallet();
-    const broswerWalletPluginList = solanaWalletsAdapterWallet.wallets.value;
+const isSign = ref(false);
+const {
+    publicKey,
+    wallet,
+    disconnect,
+    signMessage,
+    select,
+    wallets,
+    connect,
+} = useWallet();
+const walletNum = ref<string>('')
+const now = moment().utc()
+const timeString = now.format('YYYY-MM-DDTHH:mm:ss.SSS') + 'Z'
+const publicAddress = base58;
+try {
+    //1.调用接口获取nonce
+    const { nonce } = await ucApi.getMetamaskNonce({
+        publicAddress,
+        operateEnum: MetamaskOperate.login,
+    });
+    // // `publicKey` will be null if the wallet isn't connected
+    // if (!publicKey) throw new Error(t('solana.notConnect'));
+    // if (!signMessage)
+    //     throw new Error(t('solana.signError'));
+    // const now = moment().utc()
+    // const timeString = now.format('YYYY-MM-DDTHH:mm:ss.SSS') + 'Z'
 
-    console.log(broswerWalletPluginList.length);
+    //2.自定义message,自定文案+publicAddress+nonce
+    const message = `Welcome to the Seeds!\n\nThis request will not trigger a blockchain transaction or cost any gas fees.\n\nWallet address:\n${publicAddress}\n\nURL:https://www.theseeds.io/\nVersion:1\nChain ID:mainnet\nNonce:${nonce}\nIssued At:${timeString}`;
 
-    // let enableBroswerWalletPluginCount = 0;
-    // for (let index = 0; index < broswerWalletPluginList.length; index++) {
+    //3.调用钱包api拉起签名,对message做了UTF-8字节流转换(new TextEncoder().encode()),此处API限制必须要转换
+    //4.接口返回signature,返回的数据是一个Uint8Array,例[65, 194, 32, 13, 134, 189, 107, 70, 220, 51, 226, 42, 18, 244, 7, 75, 139, 157, 58, 181, 139, 174, 119, 199, 217, 67, 8, 166, 139, 78, 56, 254, 35, 213, 247, 25, 164, 80, 63, 10, 188, 61, 175, 226, 43, 110, 114, 149, 70, 230, 140, 128, 84, 200, 244, 216, 214, 173, 102, 57, 181, 119, 250, 2, buffer: ArrayBuffer(64), byteLength: 64, byteOffset: 0, length: 64, Symbol(Symbol.toStringTag): 'Uint8Array']
+    // let address1 = JSON.parse(JSON.stringify(walletNum.value))
+    const signature = await signMessage(new TextEncoder().encode(message));
+    // let address2 = JSON.parse(JSON.stringify(walletNum.value))
+    // if (address1 !== address2) return
 
-    //     if (broswerWalletPluginList[index].readyState === `Installed`) {
-    //         enableBroswerWalletPluginCount++;
-    //     }
+    //5.此处针对后端接口要求对返回的signature进行转换
+    const newArray = Uint8Array.from(signature);
+    const newSignature = bs58.encode(newArray);
+    const params = {
+        message,
+        publicAddress,
+        signature: newSignature,
+        // inviteCode,
+    };
+    //8.非首次注册,调用后端接口验证签名
+    const result = await ucApi.metamaskLogin(params);
+    if (result) {
+        await writeToken(result.ucToken);
+        // Notification.success({
+        //     title: t('login.success'),
+        // });
+        isSign.value = false
+        setTimeout(() => {
+            localStorage.setItem('loginMethod', 'wallet')
+            login$.next()
+        }, 500)
+        // loginSuccess();
+    }
+    // //6.获取是否首次注册
+    // const res = await ucApi.inviteFlag({
+    //   account: publicAddress,
+    // });
+    // if (res) {
+    //   //7.首次注册,需输入邀请码
+    //   dispatchEvent(new CustomEvent('INVITE_FLAG', { detail: params }));
+    // } else {
+    //   //8.非首次注册,调用后端接口验证签名
+    //   const result = await ucApi.metamaskLogin(params);
+    //   if (result) {
+    //     writeToken(result.ucToken);
+    //     Notification.success({
+    //       title: 'Login successfully!',
+    //     });
+    //     isSign.current = false
+    //     setTimeout(() => {
+    //       localStorage.setItem('loginMethod', 'wallet')
+    //       login$.next()
+    //     }, 500)
+    //     // loginSuccess();
+    //   }
     // }
+} catch (error) {
+    isSign.value = false
+    console.warn('error');
+}
 
-    // // [mk] 3-3
-    // if (enableBroswerWalletPluginCount === 0) {
-    //     return;
-    // }
-
-    // // [mk] 3-4 select wallet plugin and connect
-    // solanaWalletsAdapterWallet.select("Phantom" as tSolanaWalletAdapterWalletName);
-    // await solanaWalletsAdapterWallet.connect();
-
-    // // [mk] 3-5 get my wallet plugin nft token address base58 list 
-    // const solanaWalletsAdapterAnchorWallet: any = useSolanaWalletsAdapterAnchorWallet();
-    // const solanaAnchorJsWeb3Connection = new SolanaAnchorJs.web3.Connection(solanaAlchemyUrl, solanaCommitmentEnum.confirmed);
-
-    // const tmpMyBroswerWalletPluginNftTokenAddressBase58List = await MyPackageProvider.getMyBroswerWalletPluginNftTokenAddressBase58List(
-    //     solanaWalletsAdapterAnchorWallet.value?.publicKey as SolanaAnchorJs.web3.PublicKey,
-    //     solanaWalletsAdapterAnchorWallet as tSolanaWalletsAdapterAnchorWallet,
-    //     solanaAnchorJsWeb3Connection
-    // );
-
-    // // [mk] 3-6
-    // if (tmpMyBroswerWalletPluginNftTokenAddressBase58List.length === 0) {
-    //     return;
-    // }
-
-};
+// };
 
 </script>
 
