@@ -1,6 +1,6 @@
 import { readToken, removeToken } from '@/storage/token';
-import { Toast as aMessage, Notification } from '@douyinfe/semi-ui';
-import fetch from 'isomorphic-fetch';
+// import { Toast as aMessage, Notification } from '@douyinfe/semi-ui';
+// import fetch from 'isomorphic-fetch';
 import { stringify } from 'querystring';
 import { whiteList } from './enum';
 let baseUrl = '/api/v1';

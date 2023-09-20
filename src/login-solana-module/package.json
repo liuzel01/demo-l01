@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "@solana/wallet-adapter-vue": "^0.4.5"
+  }
+}
