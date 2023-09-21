@@ -31,7 +31,7 @@ import {
     type AnchorWallet as tSolanaWalletsAdapterAnchorWallet
 } from "solana-wallets-vue";
 import type { WalletName as tSolanaWalletAdapterWalletName } from "@solana/wallet-adapter-base";
-// import { eventTypeEnum } from "@/message-module/services/message.provider";
+import { eventTypeEnum } from "@/message-module/services/message.provider";
 // import { nftStateEnum } from "@/my-package-module/services/my-package.provider";
 // import { marketPlaceModeEnum } from "@/market-place-module/services/market-place.provider";
 
@@ -46,63 +46,73 @@ const viewBroswerWalletPluginList = ref<any[]>([]);
 const viewCloneEventType = ref<eventTypeEnum>();
 const viewCloneEventItem = ref<tDbEventItem>();
 
-// [mk] for nft state change
-const viewCloneOldNftState = ref<nftStateEnum>();
-const viewCloneNewNftState = ref<nftStateEnum>();
-const viewCloneNftItem = ref<tDbNftItem>();
+// // [mk] for nft state change
+// const viewCloneOldNftState = ref<nftStateEnum>();
+// const viewCloneNewNftState = ref<nftStateEnum>();
+// const viewCloneNftItem = ref<tDbNftItem>();
 
-// [mk] for nft auction bidding
-const viewCloneBiddingItem = ref<tDbNftAuctionBiddingItem>();
-const viewCloneBiddingList = ref<tDbNftAuctionBiddingItem[]>();
+// // [mk] for nft auction bidding
+// const viewCloneBiddingItem = ref<tDbNftAuctionBiddingItem>();
+// const viewCloneBiddingList = ref<tDbNftAuctionBiddingItem[]>();
 
-// [mk] for market place mode
-const viewCloneMarketPlaceMode = ref<marketPlaceModeEnum>();
-const viewCloneBlindBoxHeroItem = ref<tDbBlindBoxHeroItem>();
+// // [mk] for market place mode
+// const viewCloneMarketPlaceMode = ref<marketPlaceModeEnum>();
+// const viewCloneBlindBoxHeroItem = ref<tDbBlindBoxHeroItem>();
 
 const viewCloneBroswerWalletPluginProvider = ref<tSolanaWalletsAdapterAnchorWallet>();
 
 // [mk] 1 open dialog for mint or compound
+
 const openDialogUnderMintOrCompoundModeAction = (eventType: eventTypeEnum, row: tDbEventItem) => {
 
     viewCloneEventType.value = JSON.parse(JSON.stringify(eventType));
     viewCloneEventItem.value = JSON.parse(JSON.stringify(row));
-
     __openDialogAction();
+}
+// const openDialogUnderMintOrCompoundModeAction = (eventType: eventTypeEnum, row: tDbEventItem) => {
 
-};
+//     // console.log(eventType);
+//     // console.log(row);
 
-// [mk] 2 open dialog for nft state change
-const openDialogUnderNftStateChangeModeAction = (oldNftState: nftStateEnum, newNftState: nftStateEnum, dbNftItem: tDbNftItem, biddingList: tDbNftAuctionBiddingItem[]) => {
+//     viewCloneEventType.value = JSON.parse(JSON.stringify(eventType));
+//     viewCloneEventItem.value = JSON.parse(JSON.stringify(row));
 
-    viewCloneOldNftState.value = JSON.parse(JSON.stringify(oldNftState));
-    viewCloneNewNftState.value = JSON.parse(JSON.stringify(newNftState));
-    viewCloneNftItem.value = JSON.parse(JSON.stringify(dbNftItem));
-    viewCloneBiddingList.value = JSON.parse(JSON.stringify(biddingList));
+//     __openDialogAction();
 
-    __openDialogAction();
+// };
 
-};
+// // [mk] 2 open dialog for nft state change
+// const openDialogUnderNftStateChangeModeAction = (oldNftState: nftStateEnum, newNftState: nftStateEnum, dbNftItem: tDbNftItem, biddingList: tDbNftAuctionBiddingItem[]) => {
 
-// [mk] 3 open dialog for nft auction buyer bidding or nft owner accept buyer bidding
-const openDialogUnderNftAuctionModeAction = (biddingItem: tDbNftAuctionBiddingItem, biddingList: tDbNftAuctionBiddingItem[], dbNftItem?: tDbNftItem) => {
+//     viewCloneOldNftState.value = JSON.parse(JSON.stringify(oldNftState));
+//     viewCloneNewNftState.value = JSON.parse(JSON.stringify(newNftState));
+//     viewCloneNftItem.value = JSON.parse(JSON.stringify(dbNftItem));
+//     viewCloneBiddingList.value = JSON.parse(JSON.stringify(biddingList));
 
-    viewCloneBiddingItem.value = JSON.parse(JSON.stringify(biddingItem));
-    viewCloneBiddingList.value = JSON.parse(JSON.stringify(biddingList));
-    viewCloneNftItem.value = JSON.parse(JSON.stringify(dbNftItem));
+//     __openDialogAction();
 
-    __openDialogAction();
+// };
 
-};
+// // [mk] 3 open dialog for nft auction buyer bidding or nft owner accept buyer bidding
+// const openDialogUnderNftAuctionModeAction = (biddingItem: tDbNftAuctionBiddingItem, biddingList: tDbNftAuctionBiddingItem[], dbNftItem?: tDbNftItem) => {
 
-// [mk] 4 open dialog for market place mode
-const openDialogUnderMarketPlaceModeAction = (marketPlaceModeEnumValue: marketPlaceModeEnum, dbBlindBoxHeroItem: tDbBlindBoxHeroItem) => {
+//     viewCloneBiddingItem.value = JSON.parse(JSON.stringify(biddingItem));
+//     viewCloneBiddingList.value = JSON.parse(JSON.stringify(biddingList));
+//     viewCloneNftItem.value = JSON.parse(JSON.stringify(dbNftItem));
 
-    viewCloneMarketPlaceMode.value = JSON.parse(JSON.stringify(marketPlaceModeEnumValue));
-    viewCloneBlindBoxHeroItem.value = JSON.parse(JSON.stringify(dbBlindBoxHeroItem));
+//     __openDialogAction();
 
-    __openDialogAction();
+// };
 
-};
+// // [mk] 4 open dialog for market place mode
+// const openDialogUnderMarketPlaceModeAction = (marketPlaceModeEnumValue: marketPlaceModeEnum, dbBlindBoxHeroItem: tDbBlindBoxHeroItem) => {
+
+//     viewCloneMarketPlaceMode.value = JSON.parse(JSON.stringify(marketPlaceModeEnumValue));
+//     viewCloneBlindBoxHeroItem.value = JSON.parse(JSON.stringify(dbBlindBoxHeroItem));
+
+//     __openDialogAction();
+
+// };
 
 const __openDialogAction = async () => {
 
@@ -161,18 +171,18 @@ const submitAction = () => {
         eventType: viewCloneEventType.value,
         eventItem: viewCloneEventItem.value,
 
-        // [mk] fot nft state change
-        oldNftState: viewCloneOldNftState.value,
-        newNftState: viewCloneNewNftState.value,
-        nftItem: viewCloneNftItem.value,
+        // // [mk] fot nft state change
+        // oldNftState: viewCloneOldNftState.value,
+        // newNftState: viewCloneNewNftState.value,
+        // nftItem: viewCloneNftItem.value,
 
-        // [mk] for nft auction bidding
-        biddingItem: viewCloneBiddingItem.value,
-        biddingList: viewCloneBiddingList.value,
+        // // [mk] for nft auction bidding
+        // biddingItem: viewCloneBiddingItem.value,
+        // biddingList: viewCloneBiddingList.value,
 
-        // [mk] for market place mode
-        marketPlaceMode: viewCloneMarketPlaceMode.value,
-        blindBoxHeroItem: viewCloneBlindBoxHeroItem.value,
+        // // [mk] for market place mode
+        // marketPlaceMode: viewCloneMarketPlaceMode.value,
+        // blindBoxHeroItem: viewCloneBlindBoxHeroItem.value,
 
         broswerWalletPluginProvider: viewCloneBroswerWalletPluginProvider.value,
     };
@@ -189,19 +199,19 @@ const closeDialogAction = () => {
     viewCloneEventType.value = void 0;
     viewCloneEventItem.value = void 0;
 
-    // [mk] fot nft state change
-    viewCloneOldNftState.value = void 0;
-    viewCloneNewNftState.value = void 0;
-    viewCloneNftItem.value = void 0;
+    // // [mk] fot nft state change
+    // viewCloneOldNftState.value = void 0;
+    // viewCloneNewNftState.value = void 0;
+    // viewCloneNftItem.value = void 0;
 
-    // [mk] for nft auction bidding
-    viewCloneBiddingItem.value = void 0;
-    viewCloneBiddingList.value = void 0;
-    viewCloneNftItem.value = void 0;
+    // // [mk] for nft auction bidding
+    // viewCloneBiddingItem.value = void 0;
+    // viewCloneBiddingList.value = void 0;
+    // viewCloneNftItem.value = void 0;
 
-    // [mk] for market place mode
-    viewCloneMarketPlaceMode.value = void 0;
-    viewCloneBlindBoxHeroItem.value = void 0;
+    // // [mk] for market place mode
+    // viewCloneMarketPlaceMode.value = void 0;
+    // viewCloneBlindBoxHeroItem.value = void 0;
 
     viewCloneBroswerWalletPluginProvider.value = void 0;
 
@@ -212,9 +222,9 @@ const closeDialogAction = () => {
 defineExpose(
     {
         openDialogUnderMintOrCompoundModeAction,
-        openDialogUnderNftStateChangeModeAction,
-        openDialogUnderNftAuctionModeAction,
-        openDialogUnderMarketPlaceModeAction,
+        // openDialogUnderNftStateChangeModeAction,
+        // openDialogUnderNftAuctionModeAction,
+        // openDialogUnderMarketPlaceModeAction,
     }
 );
 </script>

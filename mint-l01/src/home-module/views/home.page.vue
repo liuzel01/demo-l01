@@ -1,16 +1,17 @@
 <template>
     <div>
         <div class="entry-box">
-
-            <!-- <xh-icon custom-class="wallet-icon-entry-item" icon-class="wallet" icon-size="31px" fill-color="#191B28"
+            <template #default="scope">
+                <!-- <xh-icon custom-class="wallet-icon-entry-item" icon-class="wallet" icon-size="31px" fill-color="#191B28"
                 @click="loginByBroswerWalletPluginAction" /> -->
-            <xh-icon custom-class="wallet-icon-entry-item" icon-class="wallet" icon-size="31px" fill-color="#191B28"
-                @click="selectBroswerWalletPluginAction" />
-
+                <xh-icon custom-class="wallet-icon-entry-item" icon-class="wallet" icon-size="31px" fill-color="#191B28"
+                    @click="(selectBroswerWalletPluginAction(routeQueryTab,scope.row))" />
+            </template>
         </div>
     </div>
-    <BroswerWalletPluginListDialogTmpl ref="refBroswerWalletListDialogTmpl" title="选择钱包插件"
-        @submitTransfer="afterSelectBroswerWalletPluginTransfer" />
+
+    <!-- <BroswerWalletPluginListDialogTmpl ref="refBroswerWalletListDialogTmpl" title="选择钱包插件"
+        @submitTransfer="afterSelectBroswerWalletPluginTransfer" /> -->
 </template>
 
 <script setup lang="ts">
@@ -18,16 +19,19 @@
 //     alert("[todo]");
 // }
 
-import { ElMessageBox, ElMessage } from "element-plus";
+// import { ElMessageBox, ElMessage } from "element-plus";
 import { ref } from "vue";
 import BroswerWalletPluginListDialogTmpl from "@/common-module/components/broswer-wallet-plugin-list-dialog.tmpl.vue";
-const refBroswerWalletListDialogTmpl = ref<InstanceType<typeof BroswerWalletPluginListDialogTmpl> | null>(null);
+import MessageProvider, { eventTypeLabelEnum, eventStatusEnum, eventPayTypeEnum } from "@/message-module/services/message.provider";
+// import { Message } from "@solana/web3.js";
+// const routeQueryTab = ref<eventTypeLabelEnum>(eventTypeLabelEnum.mint);
+// const refBroswerWalletListDialogTmpl = ref<InstanceType<typeof BroswerWalletPluginListDialogTmpl> | null>(null);
 
-const selectBroswerWalletPluginAction = (tabName: eventTypeLabelEnum, row: tDbEventItem) => {
+// const selectBroswerWalletPluginAction = (tabName: eventTypeLabelEnum, row: tDbEventItem) => {
 
-    refBroswerWalletListDialogTmpl.value?.openDialogUnderMintOrCompoundModeAction(MessageProvider.getEventTypeEnumValueByQueryTab(tabName), row);
+//     refBroswerWalletListDialogTmpl.value?.openDialogUnderMintOrCompoundModeAction(MessageProvider.getEventTypeEnumValueByQueryTab(tabName), row);
 
-};
+// };
 
 const afterSelectBroswerWalletPluginTransfer = async (params: iBroswerWalletPluginListDialogTmplSubmitTransferParams) => {
 
@@ -36,7 +40,7 @@ const afterSelectBroswerWalletPluginTransfer = async (params: iBroswerWalletPlug
     // }
     // else {
 
-    ElMessage({ dangerouslyUseHTMLString: true, message: `<i style="color:red;">Your account has not been bound to solana wallet, please try again after binding.</i>`, });
+    // ElMessage({ dangerouslyUseHTMLString: true, message: `<i style="color:red;">Your account has not been bound to solana wallet, please try again after binding.</i>`, });
     // $router.push(`/account#wallet`); // [todo]
     // return;
     // }
