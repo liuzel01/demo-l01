@@ -63,10 +63,11 @@ const viewCloneBroswerWalletPluginProvider = ref<tSolanaWalletsAdapterAnchorWall
 
 // [mk] 1 open dialog for mint or compound
 
-const openDialogUnderMintOrCompoundModeAction = (eventType: eventTypeEnum, row: tDbEventItem) => {
+const openDialogUnderMintOrCompoundModeAction = () => {
+    // const openDialogUnderMintOrCompoundModeAction = (eventType: eventTypeEnum, row: tDbEventItem) => {
 
-    viewCloneEventType.value = JSON.parse(JSON.stringify(eventType));
-    viewCloneEventItem.value = JSON.parse(JSON.stringify(row));
+    // viewCloneEventType.value = JSON.parse(JSON.stringify(eventType));
+    // viewCloneEventItem.value = JSON.parse(JSON.stringify(row));
     __openDialogAction();
 }
 // const openDialogUnderMintOrCompoundModeAction = (eventType: eventTypeEnum, row: tDbEventItem) => {
@@ -113,6 +114,7 @@ const openDialogUnderMintOrCompoundModeAction = (eventType: eventTypeEnum, row: 
 //     __openDialogAction();
 
 // };
+
 
 const __openDialogAction = async () => {
 
