@@ -1,12 +1,13 @@
 <template>
     <div>
+        <p>yige zujian </p>
+    </div>
+    <div>
         <div class="entry-box">
-            <!-- <template> -->
             <!-- <xh-icon custom-class="wallet-icon-entry-item" icon-class="wallet" icon-size="31px" fill-color="#191B28"
                 @click="loginByBroswerWalletPluginAction" /> -->
             <xh-icon custom-class="wallet-icon-entry-item" icon-class="wallet" icon-size="31px" fill-color="#191B28"
                 @click="selectBroswerWalletPluginAction" />
-            <!-- </template> -->
         </div>
     </div>
 
@@ -15,25 +16,24 @@
 </template>
 
 <script setup lang="ts">
-// const loginByBroswerWalletPluginAction = async () => {
-//     alert("[todo]");
-// }
+
+import { defineComponent } from 'vue'
+
 
 // import { ElMessageBox, ElMessage } from "element-plus";
-import { ref } from "vue";
-import { BroswerWalletPluginListDialogTmpl } from "@/common-module/components/broswer-wallet-plugin-list-dialog.tmpl.vue";
-const refBroswerWalletListDialogTmpl = ref<InstanceType<typeof BroswerWalletPluginListDialogTmpl> | null>(null);
-import MessageProvider, { eventTypeLabelEnum, eventStatusEnum, eventPayTypeEnum } from "@/message-module/services/message.provider";
-// import { Message } from "@solana/web3.js";
-// const routeQueryTab = ref<eventTypeLabelEnum>(eventTypeLabelEnum.mint);
+// import { ref } from "vue";
+// import BroswerWalletPluginListDialogTmpl from "@/common-module/components/broswer-wallet-plugin-list-dialog.tmpl.vue";
+// const refBroswerWalletListDialogTmpl = ref<InstanceType<typeof BroswerWalletPluginListDialogTmpl> | null>(null);
 
-const selectBroswerWalletPluginAction = () => {
+// const selectBroswerWalletPluginAction = () => {
 
-    // alert("[todo]")
-    refBroswerWalletListDialogTmpl.value?.openDialogUnderMintOrCompoundModeAction()
-    // refBroswerWalletListDialogTmpl.value?.openDialogUnderMintOrCompoundModeAction(MessageProvider.getEventTypeEnumValueByQueryTab);
+//     // alert("[todo]") 
+//     console.log(refBroswerWalletListDialogTmpl.value);
 
-};
+//     refBroswerWalletListDialogTmpl.value?.openDialogUnderMintOrCompoundModeAction()
+//     // refBroswerWalletListDialogTmpl.value?.openDialogUnderMintOrCompoundModeAction(MessageProvider.getEventTypeEnumValueByQueryTab);
+
+// };
 
 // const afterSelectBroswerWalletPluginTransfer = async (params: iBroswerWalletPluginListDialogTmplSubmitTransferParams) => {
 
