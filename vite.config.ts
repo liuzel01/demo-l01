@@ -1,9 +1,10 @@
 import { defineConfig, loadEnv } from "vite";
 import vue from '@vitejs/plugin-vue'
 import { fileURLToPath } from 'url';
-import { resolve } from 'path';
+import path from 'path';
 import vueJsx from "@vitejs/plugin-vue-jsx";
 import viteHttps from "@vitejs/plugin-basic-ssl";
+import { createSvgIconsPlugin } from "vite-plugin-svg-icons";
 // [ext] polyfill some Node.js modules
 import { NodeGlobalsPolyfillPlugin } from "@esbuild-plugins/node-globals-polyfill";
 import { NodeModulesPolyfillPlugin } from "@esbuild-plugins/node-modules-polyfill";
@@ -61,6 +62,11 @@ export default defineConfig(
         vue(),
         vueJsx(),
         viteHttps(),
+        // [ext] icon svg
+        createSvgIconsPlugin({
+          iconDirs: [path.resolve(process.cwd(), "src/assets/svgs")],
+          symbolId: "icon-[dir]-[name]",
+        }),
         // [ext] polyfill some Node.js modules
         NodeModulesPolyfillPlugin(),
         // [ext] polyfill some Node.js modules
