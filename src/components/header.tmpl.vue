@@ -28,14 +28,33 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { ref, computed } from "vue";
 import { useRoute, useRouter } from 'vue-router'
 import { useStore } from 'vuex'
+import {
+    initWallet,
+    useWallet as useSolanaWalletsAdapterWallet,
+    useAnchorWallet as useSolanaWalletsAdapterAnchorWallet,
+    type AnchorWallet as tSolanaWalletsAdapterAnchorWallet
+} from "solana-wallets-vue"
+import { PhantomWalletAdapter, SolflareWalletAdapter } from "@solana/wallet-adapter-wallets";
 
+const viewBroswerWalletPluginList = ref<any[]>([]);
+
+const viewIsPhantomInstall = computed<boolean>(
+    () => {
+        const matchBroswerWalletPlugInItem = viewBroswerWalletPluginList.value.find(
+            bnroswerWalletPlugInItem =>
+                bnroswerWalletPlugInItem.name === `Phantom` && bnroswerWalletPlugInItem.readyState === `Installed`
+        );
+        return matchBroswerWalletPlugInItem ? true : false;
+    }
+);
 const $route = useRoute();
 const $router = useRouter();
 const $store = useStore();
 
+const viewIsShowDialog = ref(false);
 const viewIsLogin = computed<boolean>(
     () => {
         return $store.getters.getVuexUserInfo ? true : false;
@@ -43,7 +62,61 @@ const viewIsLogin = computed<boolean>(
 );
 
 const loginByBroswerWalletPluginAction = () => {
-    alert("[todo]");
+    // alert("[todo]");
+
+    // [mk] 1 init
+    initWallet(
+        {
+            wallets: [new PhantomWalletAdapter(), new SolflareWalletAdapter(),],
+            autoConnect: false,
+            // cluster: SolanaAnchorJs.web3.clusterApiUrl("mainnet-beta"), [todo]
+        }
+    );
+
+    // [mk] 2 load broswer wallet plugin list
+    const solanaWalletsAdapterWallet = useSolanaWalletsAdapterWallet();
+
+    const broswerWalletPluginList = solanaWalletsAdapterWallet.wallets.value;
+
+    let tmpBroswerWalletPluginList = [];
+
+    for (let index = 0; index < broswerWalletPluginList.length; index++) {
+        tmpBroswerWalletPluginList.push(
+            {
+                name: broswerWalletPluginList[index].adapter.name,
+                readyState: broswerWalletPluginList[index].readyState,
+            }
+        );
+    }
+
+    viewBroswerWalletPluginList.value = tmpBroswerWalletPluginList;
+
+    // [mk] 3
+    viewIsShowDialog.value = true;
+
+    // const { wallet, publicKey, connectWallet, disconnectWallet, connected } = useSolanaWalletsAdapterWallet()
+
+    // function connect() {
+    //     connectWallet().then(() => {
+    //         if (wallet.value) {
+    //             alert(`Connected with the address: ${publicKey.value?.toBase58()}`);
+    //         } else {
+    //             alert('Failed to connect wallet');
+    //         }
+    //     })
+    // }
+
+    // // Initial setup. Pass in the desired wallets for your application
+    // initWallet({
+    //     wallets: [
+    //         { name: 'Phantom', url: 'https://phantom.app/' }
+    //     ],
+    //     autoConnect: true, 
+    // });
+
+    // return {
+    //     connect,
+    // }
 };
 
 const gotoPageAction = (routePath: string = "/login") => {
@@ -53,6 +126,5 @@ const gotoPageAction = (routePath: string = "/login") => {
 const viewUserInfo = computed<tDbUserInfo>(() => {
     return $store.getters.getVuexUserInfo
 })
-
 
 </script>
